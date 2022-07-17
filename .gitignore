@@ -1,4 +1,6 @@
 .vagrant/
 venv/
+.env/
+.venv/
 
 app.log
