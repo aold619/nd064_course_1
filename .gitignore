@@ -1,8 +1,6 @@
-# folder
 .vagrant/
 venv/
 .env/
 .venv/
 
-# file
 app.log
