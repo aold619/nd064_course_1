@@ -12,12 +12,27 @@ docker logs techtrends
 
 ## Logs from the container running the TechTrends application
 # TODO: paste logs from the Docker container 
- * Serving Flask app 'app' (lazy loading)
- * Environment: production
-   WARNING: This is a development server. Do not use it in a production deployment.
-   Use a production WSGI server instead.
- * Debug mode: off
- * Running on all addresses.
-   WARNING: This is a development server. Do not use it in a production deployment.
- * Running on http://172.17.0.2:3111/ (Press CTRL+C to quit)
-
+2022-07-19T07:09:28.259091844Z  * Serving Flask app 'app' (lazy loading)
+2022-07-19T07:09:28.259147311Z  * Environment: production
+2022-07-19T07:09:28.259153381Z    WARNING: This is a development server. Do not use it in a production deployment.
+2022-07-19T07:09:28.259158699Z    Use a production WSGI server instead.
+2022-07-19T07:09:28.259293095Z  * Debug mode: on
+2022-07-19T07:09:28.276014433Z WARNING: werkzeug: 2022-07-19 07:09:28,275 -  * Running on all addresses.
+2022-07-19T07:09:28.276057096Z    WARNING: This is a development server. Do not use it in a production deployment.
+2022-07-19T07:09:28.276135836Z INFO: werkzeug: 2022-07-19 07:09:28,275 -  * Running on http://172.17.0.2:3111/ (Press CTRL+C to quit)
+2022-07-19T07:09:28.277289439Z INFO: werkzeug: 2022-07-19 07:09:28,277 -  * Restarting with stat
+2022-07-19T07:09:28.720475796Z WARNING: werkzeug: 2022-07-19 07:09:28,720 -  * Debugger is active!
+2022-07-19T07:09:28.725553437Z INFO: werkzeug: 2022-07-19 07:09:28,725 -  * Debugger PIN: 138-951-911
+2022-07-19T07:09:48.224766749Z INFO: werkzeug: 2022-07-19 07:09:48,224 - 103.117.103.34 - - [19/Jul/2022 07:09:48] "GET / HTTP/1.1" 200 -
+2022-07-19T07:09:48.551674830Z INFO: werkzeug: 2022-07-19 07:09:48,551 - 103.117.103.34 - - [19/Jul/2022 07:09:48] "GET /static/css/main.css HTTP/1.1" 200 -
+2022-07-19T07:10:16.548558039Z INFO: app: 2022-07-19 07:10:16,547 - 2020 CNCF Annual Report
+2022-07-19T07:10:16.556119127Z INFO: werkzeug: 2022-07-19 07:10:16,555 - 103.117.103.34 - - [19/Jul/2022 07:10:16] "GET /1 HTTP/1.1" 200 -
+2022-07-19T07:10:16.908331407Z INFO: werkzeug: 2022-07-19 07:10:16,907 - 103.117.103.34 - - [19/Jul/2022 07:10:16] "GET /static/css/main.css HTTP/1.1" 304 -
+2022-07-19T07:10:28.470354932Z INFO: werkzeug: 2022-07-19 07:10:28,468 - 103.117.103.34 - - [19/Jul/2022 07:10:28] "GET / HTTP/1.1" 200 -
+2022-07-19T07:10:28.826418503Z INFO: werkzeug: 2022-07-19 07:10:28,825 - 103.117.103.34 - - [19/Jul/2022 07:10:28] "GET /static/css/main.css HTTP/1.1" 304 -
+2022-07-19T07:10:30.522764279Z INFO: app: 2022-07-19 07:10:30,522 - CNCF Cloud Native Interactive Landscape
+2022-07-19T07:10:30.524111295Z INFO: werkzeug: 2022-07-19 07:10:30,523 - 103.117.103.34 - - [19/Jul/2022 07:10:30] "GET /4 HTTP/1.1" 200 -
+2022-07-19T07:10:30.865772351Z INFO: werkzeug: 2022-07-19 07:10:30,865 - 103.117.103.34 - - [19/Jul/2022 07:10:30] "GET /static/css/main.css HTTP/1.1" 304 -
+2022-07-19T07:10:35.729959873Z INFO: werkzeug: 2022-07-19 07:10:35,729 - 103.117.103.34 - - [19/Jul/2022 07:10:35] "GET / HTTP/1.1" 200 -
+2022-07-19T07:10:36.076012991Z INFO: werkzeug: 2022-07-19 07:10:36,075 - 103.117.103.34 - - [19/Jul/2022 07:10:36] "GET /static/css/main.css HTTP/1.1" 304 -
+2022-07-19T07:10:52.611086066Z INFO: werkzeug: 2022-07-19 07:10:52,609 - 103.117.103.34 - - [19/Jul/2022 07:10:52] "GET /metrics HTTP/1.1" 200 -
