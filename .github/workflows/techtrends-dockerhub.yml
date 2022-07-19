@@ -28,7 +28,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: ./project
+          context: https://github.com/aold619/nd064_course_1.git#main:project
           file: Dockerfile
           push: true
           tags: aold619/techtrends:latest
