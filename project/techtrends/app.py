@@ -4,11 +4,14 @@ from flask import Flask, jsonify, json, render_template, request, url_for, redir
 from werkzeug.exceptions import abort
 
 
+CONN_NUM = 0
+
 # Def decorator to count total amount of connections to the database
 def conn_counter(func):
     @functools.wraps(func)
     def wrapper(*args, **kw):
-        app.config['CONN_NUM'] += 1
+        global CONN_NUM
+        CONN_NUM += 1
         return func(*args, **kw)
     return wrapper
 
@@ -18,14 +21,13 @@ def conn_counter(func):
 def get_db_connection():
     connection = sqlite3.connect('database.db')
     connection.row_factory = sqlite3.Row
-    logging.info("connection has been created", app.config['CONN_NUM'])
     return connection
 
 # Function to close db connection and reduce counter
 def close_connection(conn_obj):
+    global CONN_NUM
     conn_obj.close
-    app.config['CONN_NUM'] -= 1
-    logging.info("connection has been closed", app.config['CONN_NUM'])
+    CONN_NUM -= 1
 
 # Function to get a post using its ID
 def get_post(post_id):
@@ -38,7 +40,6 @@ def get_post(post_id):
 
 # Define the Flask application
 app = Flask(__name__)
-app.config['CONN_NUM'] = 0
 app.config['DEBUG'] = True
 
 # Define the main route of the web application 
@@ -106,12 +107,12 @@ def healthz():
 @app.route('/metrics', methods=('GET', 'POST'))
 def metrics():
     connection = get_db_connection()
-    conn_num = app.config['CONN_NUM']
-    post_count = connection.execute('select count(*) as conn_num from posts where true').fetchone()
+    post_count = connection.execute('select count(*) as post_count from posts where true').fetchone()
+    curr_conn_num = CONN_NUM
     #connection.close()
     close_connection(connection)
-    return jsonify({'db_connection_count': conn_num,
-        'post_count': dict(post_count).get('conn_num')})
+    return jsonify({'db_connection_count': curr_conn_num,
+        'post_count': dict(post_count).get('post_count')})
 
 
 # start the application on port 3111
