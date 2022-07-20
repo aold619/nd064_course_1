@@ -1,7 +1,8 @@
-import sqlite3, functools, logging, sys
+import sqlite3, functools, logging, sys, os
 
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
 from werkzeug.exceptions import abort
+
 
 # Def decorator to count total amount of connections to the database
 def conn_counter(func):
@@ -13,23 +14,30 @@ def conn_counter(func):
 
 # Function to get a database connection.
 # This function connects to database with the name `database.db`
+@conn_counter
 def get_db_connection():
     connection = sqlite3.connect('database.db')
     connection.row_factory = sqlite3.Row
+    logging.info("connection has been created", app.config['CONN_NUM'])
     return connection
 
+# Function to close db connection and reduce counter
+def close_connection(conn_obj):
+    conn_obj.close
+    app.config['CONN_NUM'] -= 1
+    logging.info("connection has been closed", app.config['CONN_NUM'])
+
 # Function to get a post using its ID
-@conn_counter
 def get_post(post_id):
     connection = get_db_connection()
     post = connection.execute('SELECT * FROM posts WHERE id = ?',
                         (post_id,)).fetchone()
-    connection.close()
+    #connection.close()
+    close_connection(connection)
     return post
 
 # Define the Flask application
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your secret key'
 app.config['CONN_NUM'] = 0
 app.config['DEBUG'] = True
 
@@ -38,7 +46,8 @@ app.config['DEBUG'] = True
 def index():
     connection = get_db_connection()
     posts = connection.execute('SELECT * FROM posts').fetchall()
-    connection.close()
+    #connection.close()
+    close_connection(connection)
     return render_template('index.html', posts=posts)
 
 # Define how each individual article is rendered 
@@ -47,7 +56,7 @@ def index():
 def post(post_id):
     post = get_post(post_id)
     if post is None:
-        app.logger.info('404')
+        app.logger.error('Non-existing post')
         return render_template('404.html'), 404
     else:
         app.logger.info(dict(post).get('title'))
@@ -73,8 +82,8 @@ def create():
             connection.execute('INSERT INTO posts (title, content) VALUES (?, ?)',
                          (title, content))
             connection.commit()
-            connection.close()
-
+            #connection.close()
+            close_connection(connection)
             return redirect(url_for('index'))
 
     return render_template('create.html')
@@ -82,20 +91,37 @@ def create():
 # Return healthy json
 @app.route('/healthz', methods=('GET', 'POST'))
 def healthz():
-    return jsonify({'result': 'OK - Healthy'})
+    #try:
+    #    with open('filepath')
+    #    return {OK}
+    #except FileNotFoundError:
+    #    return {Error}, 500
+    
+    db_file = 'database.db'
+    if os.path.exists(db_file):
+        return jsonify({'result': 'OK - Healthy'})
+    else:
+        return jsonify({'result': 'Error - Missing {}'.format(db_file)}), 500
 
 @app.route('/metrics', methods=('GET', 'POST'))
 def metrics():
     connection = get_db_connection()
+    conn_num = app.config['CONN_NUM']
     post_count = connection.execute('select count(*) as conn_num from posts where true').fetchone()
-    connection.close()
-    return jsonify({'db_connection_count': app.config['CONN_NUM'],
+    #connection.close()
+    close_connection(connection)
+    return jsonify({'db_connection_count': conn_num,
         'post_count': dict(post_count).get('conn_num')})
+
 
 # start the application on port 3111
 if __name__ == "__main__":
     logging.basicConfig(
-            stream=sys.stdout,
-            format='%(levelname)s: %(name)s: %(asctime)s - %(message)s',
-            level=logging.DEBUG)
+            level=logging.DEBUG,
+            format='%(asctime)s [%(levelname)s] %(message)s',
+            handlers=[
+                logging.FileHandler('app.log'),
+                logging.StreamHandler()
+            ]
+    )
     app.run(host='0.0.0.0', port='3111')
