@@ -28,7 +28,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: https://github.com/aold619/nd-native_cloud-course_1.git#main:project
+          context: https://github.com/aold619/ud-native_cloud-course_1.git#main:project
           file: Dockerfile
           push: true
           tags: aold619/techtrends:latest
